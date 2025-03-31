@@ -1,0 +1,14 @@
+[package]
+name = "qc_rust_use"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+rand = "0.9.0"
+crate_lib= { path = "./crate_lib" }
+
+
+
+[[bin]]
+name = "qc_rust_use"
+path = "src/main.rs"
