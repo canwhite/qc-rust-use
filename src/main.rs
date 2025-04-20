@@ -14,11 +14,8 @@ use crate_lib::base;
 use crate_lib::base_types;
 use crate_lib::container;
 use crate_lib::clo;
-
-
 // use crate_lib::types;
-// use crate_lib::concur;
-
+use crate_lib::concur;
 
 fn main() {
     println!("Hello, world!");
@@ -31,9 +28,6 @@ fn main() {
 
     //根据路径调用,最后触及方法还是用::
     utils::print_hello();
-
-    //同样根据路径调用
-    network::client::connect();
 
     println!("3 + 5 = {}", base::add(3, 5));
 
@@ -87,22 +81,44 @@ fn main() {
 
     //=========generic_types===========
     
-
-
-
-
-
     //general types
     // types::generics_struct();
     // types::useOfTrait();
+    // concurrent part
+
+    match concur::tokio_spawn_example() {
+        Ok(result) => println!("Tokio spawned task returned: {}", result),
+        Err(e) => eprintln!("Tokio spawn example failed: {}", e),
+    }
+    
+    match tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap()
+        .block_on(concur::tokio_mpsc_example())
+    {
+        Ok(messages) => {
+            println!("Messages received from tokio_mpsc_example:");
+            for message in messages {
+                println!("{}", message);
+            }
+        },
+        Err(e) => eprintln!("Tokio MPSC example failed: {}", e),
+    }
 
 
-    // //concurrent part
 
-    // concur::closure();
-    // concur::base_thread_of_usage();
+    //reqwest和tokio - 调用异步函数 fetch_data
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap();
+    let response = rt.block_on(network::client::fetch_data());
 
-
+    match response {
+        Ok(data) => println!("成功获取数据: {:?}", data),
+        Err(e) => eprintln!("获取数据失败: {}", e),
+    }
 
 
 }

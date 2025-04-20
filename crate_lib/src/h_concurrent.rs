@@ -1,23 +1,74 @@
-use std::thread;
-use std::sync::mpsc;
-use std::sync::atomic::{AtomicUsize, Ordering};
-use std::sync::{Arc, Mutex};
-use reqwest;
+// use std::thread;
+// use std::sync::mpsc;
+// use std::sync::atomic::{AtomicUsize, Ordering};
+// use std::sync::{Arc, Mutex};
+use tokio;
 
 pub mod concur{
     use super::*;
+
     
+    pub fn tokio_spawn_example() -> Result<i32, Box<dyn std::error::Error>> {
+        // 创建 Tokio 运行时
+        let rt = tokio::runtime::Builder::new_current_thread()
+            .worker_threads(8)
+            .enable_io()
+            .build()?;
+
+        // block_on是个容器，但是可以返回值
+        let result = rt.block_on(async {
+            let handle = tokio::spawn(async {
+                println!("Tokio spawned task is running!");
+                42 // 返回一个示例值
+            });
+
+            // 等待任务结束并解包
+            handle.await.unwrap()
+        });
+
+        Ok(result)
+    }
+
+    pub async fn tokio_mpsc_example() -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        // 创建一个异步 MPSC 通道，缓冲区大小为 32
+        // 返回值是一个transit，一个receive
+        let (tx, mut rx) = tokio::sync::mpsc::channel(32);
+
+        // 生产者任务：发送消息到通道
+        let producer = tokio::spawn(async move {
+            for i in 0..5 {
+                if let Err(e) = tx.send(format!("Message {}", i)).await {
+                    eprintln!("Failed to send message: {}", e);
+                }
+            }
+        });
+
+        // 用于存储接收到的消息
+        let mut received_messages = Vec::new();
+
+        // 接收消息并存储到 Vec 中，等待接受完成
+        while let Some(message) = rx.recv().await {
+            received_messages.push(message);
+        }
+
+        // 等待生产者任务完成
+        producer.await?;
+
+        Ok(received_messages)
+    }
+
+
+    /*=========================原生操作================================
+    //1）thread spawn
     pub fn base_thread_of_usage(){
         //spawn是引发的意思，/spɔːn/
         let handle = thread::spawn(||{
             println!("子线程执行");
         });  
-
         //join是等待结束，返回了Result需要unwrap
         handle.join().unwrap();
     }
-
-    pub fn channel_of_usage(){
+        pub fn channel_of_usage(){
         //mpsc（多生产者单消费者）
         let (tx, rx) = mpsc::channel();
         thread::spawn(move || {
@@ -26,7 +77,7 @@ pub mod concur{
         println!("接收: {}", rx.recv().unwrap());
     }
 
-    //使用mutex和Arc<T>原子引用技术来保证数据安全
+    //2) mutex
     pub fn mutex_of_usage(){
         let counter = Arc::new(Mutex::new(0));
 
@@ -42,27 +93,15 @@ pub mod concur{
         // 专程iter再forEach，这样forEach就能拿到单个item
         handles.into_iter().for_each(|h| h.join().unwrap());
     }
-
-    async fn fetch_data() -> Result<String, reqwest::Error> {
-        // ? 是 Rust 的错误处理运算符，用于简化 Result 类型的处理
-        // 当遇到 Err 时，会立即返回错误，否则继续执行
-        // 第一个 await 用于等待 HTTP 请求完成
-        // 第二个 await 用于等待将响应体转换为字符串
-        reqwest::get("https://example.com").await?.text().await
-    }
     
-    pub async fn async_and_await_usage() {
-        //请求结果的整合
-        match self::fetch_data().await {
-            Ok(data) => println!("{}", data),
-            Err(e) => eprintln!("请求失败: {:?}", e),
-        }
-    }
-
+    //atonic
     pub fn atonic_of_usage(){
         let count = AtomicUsize::new(0);
         //支持多种内存顺序（如 Relaxed、SeqCst），平衡性能与一致性需求 
         count.fetch_add(1, Ordering::Relaxed);
     }
+    ================================================================*/
+
+
 
 }
