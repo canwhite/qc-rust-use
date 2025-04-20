@@ -1,30 +1,35 @@
-// export有层级，
-// Re-export everything from base module
-pub mod base; 
-
-// Re-export the demos module and its functions
-pub use base::demos;
+//mod引入，使用mod对应命名空间的内容，如果没有命名空间，可以直接使用
+pub mod a_base;  
+// 可以看作命名空间呀
+// 例如，crate_lib::demos::add() 表示从 crate_lib 模块的 demos 子模块中访问 add 函数。
+pub use a_base::base;
 // pub use base::demos::{
 //     add,
-//     dataType,
-//     useOfContainer,
-//     enumAndStruct,
-//     FlowOfControl,
-//     useOfOption,
-//     useOfResult
+//     ...
 // };
 
-//module引入
-pub mod generic_types;
-//使用module内容
-pub use generic_types::types;
+pub mod b_base_types;
+pub use b_base_types::base_types;
 
 
-//module引入
-pub mod concurrent;
+pub mod c_reference;
+pub use c_reference::container;
 
-//使用module内容
-pub use concurrent::concur;
+pub mod d_enum_struct;
+pub use d_enum_struct:: enum_struct;
+
+pub mod e_closure;
+pub use e_closure::clo;
+
+
+
+
+//同上
+pub mod g_generic_types;
+pub use g_generic_types::types;
+
+pub mod h_concurrent;
+pub use h_concurrent::concur;
 
 
 

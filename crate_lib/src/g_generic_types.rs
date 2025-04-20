@@ -6,54 +6,6 @@ pub mod types{
     */
     use std::fmt::Display;
 
-    //general type的概念和java是一致的  
-    pub fn generics_struct()->(){
-        #[derive(Debug)]  // Add Debug derive to enable printing
-        struct Point<T>{
-            x:T,
-            y:T
-        }
-
-        let integer = Point{x:1,y:2};
-        let float = Point{x:1.1,y:2.2};
-        
-        // Use debug formatting to print the structs
-        println!("Integer Point: {:?}", integer);
-        println!("Float Point: {:?}", float);
-    }
-
-    pub fn genetics_enum() -> Option<String>{
-        //我们熟知的Option和Result就是这样来的
-        enum Option<T> {
-            Some(T),
-            None
-        }
-        
-        enum Result<T,E>{
-            Ok(T),
-            Err(E)
-        }
-
-        //更进一步
-        enum TrafficLight{
-            Red,
-            Green,
-            Yellow,
-        }
-        let yellow = TrafficLight::Yellow;
-
-        //还有一种进阶版
-        enum IpAddr{
-            V4(String),
-            V6(String),
-        }
-        //这种使用的时候伴随着初始化
-        let home = IpAddr::V4(String::from("127.0.0.1"));
-
-        // 返回一个 Option<String>
-        Some("Enum example".to_string())
-    }
-
     //function signatures
     pub fn genetics_function()-> (){
         // Add PartialOrd trait bound to enable comparison
@@ -81,7 +33,7 @@ pub mod types{
 
     //trait，其实可以理解为接口的定义，然后在需要实现的时候实现，当然你也可以在定义的时候实现
     //实际上就是java接口的概念
-    pub fn useOfTrait()->(){
+    pub fn use_trait()->(){
         //定义接口，trait的作用和fn等同
         pub trait Summary {
             //里边定义方法，值引用，谁用引谁的self
@@ -124,12 +76,12 @@ pub mod types{
         notify(&tweet);
 
         //回字的第二种写法
-        pub fn notify_1<T:Summary>(item1:&T,item2:&T){
+        pub fn _notify_1<T:Summary>(item1:&T,item2:&T){
             println!("{},{}",item1.summarize(),item2.summarize());
         } 
 
         //回字的第三种写法
-        pub fn notify_2<T:Summary + Display>(item:&T){
+        pub fn _notify_2<T:Summary + Display>(item:&T){
             println!("{}",item.summarize());
         }
     }
@@ -137,7 +89,7 @@ pub mod types{
     //lifetime实际上就是变量的生命周期，还是在框架内
     // Rust 的类型推导主要在变量声明时起作用，对于函数返回值，如果不显式指定类型，通常会根据函数体内的返回值自动推导
     // 但是对于复杂情况，或者需要明确返回类型时，建议显式指定函数返回值类型
-    pub fn useOfVarLifetime() -> Option<String> {
+    pub fn use_lifetime() -> Option<String> {
         //if we want to return a referred data
         //The lifetime of a returned reference must come form the function's params
         //fn<x> ,<>里声明的是变量的lifetime
