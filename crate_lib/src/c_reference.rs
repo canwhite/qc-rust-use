@@ -37,6 +37,7 @@ pub mod container {
         rust中可以使用地址传入的是绝大多数，除了零大小类型eg: ()，切片和Traits
         --总结：用这种写法吧，也好理解，参数默认是一个地址，大不了多少层的问题
         PS：如果你在参数里主动包了，就可以自动解包
+        so，它用了很多这种引用，所以在你使用的时候也可以多写地址引用
         =========================================================*/
         if let Some(elem) = vec.get_mut(2){
             *elem = 5;
@@ -230,7 +231,7 @@ pub mod container {
         // difference
         let diff:HashSet<_> = s.difference(&s2).collect();  // 仅 set1 有[[2][24]]
         println!("diff : {:?}",diff);
-        
+
 
     }
 

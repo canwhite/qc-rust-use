@@ -13,6 +13,7 @@ mod network;
 use crate_lib::base;
 use crate_lib::base_types;
 use crate_lib::container;
+use crate_lib::clo;
 
 
 // use crate_lib::types;
@@ -80,7 +81,13 @@ fn main() {
     container::use_vec();
     container::use_hashmap();
     container::use_hashset();
+
+    //=========closure=================
+    clo::closure();
+
+    //=========generic_types===========
     
+
 
 
 

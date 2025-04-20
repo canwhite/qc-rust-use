@@ -21,16 +21,16 @@ pub use d_enum_struct:: enum_struct;
 pub mod e_closure;
 pub use e_closure::clo;
 
+pub mod f_trait;
+pub use f_trait::test;
 
-
-
-//同上
 pub mod g_generic_types;
 pub use g_generic_types::types;
 
 pub mod h_concurrent;
 pub use h_concurrent::concur;
 
-
+pub mod i_macro;
+//暂时还没use
 
 

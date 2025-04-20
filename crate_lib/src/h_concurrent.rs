@@ -6,8 +6,7 @@ use reqwest;
 
 pub mod concur{
     use super::*;
-
-
+    
     pub fn base_thread_of_usage(){
         //spawn是引发的意思，/spɔːn/
         let handle = thread::spawn(||{
@@ -16,7 +15,6 @@ pub mod concur{
 
         //join是等待结束，返回了Result需要unwrap
         handle.join().unwrap();
-
     }
 
     pub fn channel_of_usage(){
@@ -27,7 +25,6 @@ pub mod concur{
         });
         println!("接收: {}", rx.recv().unwrap());
     }
-
 
     //使用mutex和Arc<T>原子引用技术来保证数据安全
     pub fn mutex_of_usage(){
@@ -44,8 +41,6 @@ pub mod concur{
         }).collect(); 
         // 专程iter再forEach，这样forEach就能拿到单个item
         handles.into_iter().for_each(|h| h.join().unwrap());
-
-
     }
 
     async fn fetch_data() -> Result<String, reqwest::Error> {

@@ -1,11 +1,4 @@
 pub mod types{
-    /**
-    1. code reusability
-    2. abstraction
-    3. often used in structs , enums and function signatures
-    */
-    use std::fmt::Display;
-
     //function signatures
     pub fn genetics_function()-> (){
         // Add PartialOrd trait bound to enable comparison
@@ -24,7 +17,7 @@ pub mod types{
             }
             largest
         }
-
+        
         let a = [4,7,10,2];
         let b = largest(&a);
         //值引用，基本数据类型不需要:?, 当然注意不能直接输出
