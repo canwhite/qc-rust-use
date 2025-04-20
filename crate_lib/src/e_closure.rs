@@ -43,6 +43,9 @@ pub mod clo {
         let adder = create_adder(3);
         println!("Sum: {}", adder(4)); // 输出: Sum: 7
 
-        
+        //WARN: 主要是作为参数和作为返回值这一块儿有区别
+        //做参数的时候需要where定义它是什么？
+        //做返回值的时候需要Box定义它是什么，多了个dyn
+
     }
 }
