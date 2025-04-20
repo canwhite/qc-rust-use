@@ -91,11 +91,13 @@ fn main() {
         Err(e) => eprintln!("Tokio spawn example failed: {}", e),
     }
     
+    //worker_threads 是关于运行时性能的配置，主要用于控制并发线程的数量。
+    //enable_all 是关于功能的配置，用于启用运行时的所有特性。包括 I/O、时间、信号处理等。
     match tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()
         .unwrap()
-        .block_on(concur::tokio_mpsc_example())
+        .block_on(concur::tokio_mpsc_example()) //block_on里边接方法
     {
         Ok(messages) => {
             println!("Messages received from tokio_mpsc_example:");
@@ -108,11 +110,23 @@ fn main() {
 
 
 
+    // 调用 tokio_mutex_example 示例
+    match tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap()
+        .block_on(crate_lib::concur::tokio_mutex_example())
+    {
+        Ok(final_value) => println!("Tokio mutex example final counter value: {}", final_value),
+        Err(e) => eprintln!("Tokio mutex example failed: {}", e),
+    }
+
     //reqwest和tokio - 调用异步函数 fetch_data
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()
         .unwrap();
+    //block_on里边接方法，并且可以拿到返回值
     let response = rt.block_on(network::client::fetch_data());
 
     match response {

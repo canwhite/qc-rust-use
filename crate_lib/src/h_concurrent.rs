@@ -7,9 +7,10 @@ use tokio;
 pub mod concur{
     use super::*;
 
-    
+    //thread pool - worker_threads
     pub fn tokio_spawn_example() -> Result<i32, Box<dyn std::error::Error>> {
         // 创建 Tokio 运行时
+
         let rt = tokio::runtime::Builder::new_current_thread()
             .worker_threads(8)
             .enable_io()
@@ -29,6 +30,7 @@ pub mod concur{
         Ok(result)
     }
 
+    //mpsc
     pub async fn tokio_mpsc_example() -> Result<Vec<String>, Box<dyn std::error::Error>> {
         // 创建一个异步 MPSC 通道，缓冲区大小为 32
         // 返回值是一个transit，一个receive
@@ -57,8 +59,36 @@ pub mod concur{
         Ok(received_messages)
     }
 
+    // 示例：使用 Tokio 的互斥锁保护共享数据
+    pub async fn tokio_mutex_example() -> Result<i32, Box<dyn std::error::Error>> {
+        // 创建一个被 Mutex 包裹的共享计数器，使用 Arc 包裹 Mutex，以便在多个任务之间共享
+        let counter = std::sync::Arc::new(tokio::sync::Mutex::new(0));
+
+        // 创建多个任务来修改计数器
+        let handles: Vec<_> = (0..5).map(|_| {
+            // 使用 Arc::clone 创建共享引用
+            let counter_clone = std::sync::Arc::clone(&counter);
+            // total: move在执行异步任务的时候极其有用，因为任务可能在其他线程执行，需要把所有权转移
+            tokio::spawn(async move {
+                let mut num = counter_clone.lock().await;
+                *num += 1;
+            })
+        }).collect();
+
+        // 等待所有任务完成
+        for handle in handles {
+            handle.await?;
+        }
+
+        // Mutex.lock() 返回一个 MutexGuard，它实现了 Deref trait， 通过 * 操作符可以访问被保护的数据
+        let final_value = *counter.lock().await;
+        Ok(final_value)
+    }
+
+
 
     /*=========================原生操作================================
+
     //1）thread spawn
     pub fn base_thread_of_usage(){
         //spawn是引发的意思，/spɔːn/
