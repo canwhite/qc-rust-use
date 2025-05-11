@@ -49,7 +49,7 @@ fn main() {
     }
     // 使用 if let 简化 Option 的匹配
     // if let就是确认一种类型,Some(s)是定义一个Some类型的值给赋值，然后在{}中判断
-    // s是变量名
+    // s是变量名，接的时候外边包了一层Some
     if let Some(s) = base_types::use_option() {
         println!("有值{}", s);
     } else {

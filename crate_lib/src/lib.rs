@@ -1,8 +1,8 @@
 //mod引入，使用mod对应命名空间的内容，如果没有命名空间，可以直接使用
-pub mod a_base;  
+pub mod a_base;  //mod是拿namespace
 // 可以看作命名空间呀
 // 例如，crate_lib::demos::add() 表示从 crate_lib 模块的 demos 子模块中访问 add 函数。
-pub use a_base::base;
+pub use a_base::base; //use是拿方法
 // pub use base::demos::{
 //     add,
 //     ...
